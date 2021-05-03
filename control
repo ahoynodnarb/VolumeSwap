@@ -1,7 +1,7 @@
 Package: com.popsicletreehouse.volumeswap
 Name: VolumeSwap
 Depends: mobilesubstrate
-Version: 2.0
+Version: 2.1
 Architecture: iphoneos-arm
 Description: Swap your volume buttons based on device orientation
 Maintainer: PopsicleTreehouse
