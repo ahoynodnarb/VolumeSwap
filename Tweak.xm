@@ -1,28 +1,23 @@
 #import "VolumeSwap.h"
 
+static float calculateVolume(float currentVolume) {
+  if(isEnabled) {
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+    BOOL defaultSwap = (deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationPortraitUpsideDown || deviceOrientation == UIDeviceOrientationFaceUp);
+    if(defaultSwap ^ isReverse) {
+      return -currentVolume;
+    }
+  }
+  return currentVolume;
+}
+
 %group iOS13
 %hook SBVolumeControl
 -(float)volumeStepUp {
-  float orig = %orig;
-  if(isEnabled) {
-    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-    BOOL defaultSwap = (deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationPortraitUpsideDown || deviceOrientation == UIDeviceOrientationFaceUp);
-    if((defaultSwap && !isReverse) || (!defaultSwap && isReverse)) {
-      return -orig;
-    }
-  }
-  return orig;
+  return calculateVolume(%orig);
 }
 -(float)volumeStepDown {
-  float orig = %orig;
-  if(isEnabled) {
-    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-    BOOL defaultSwap = (deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationPortraitUpsideDown || deviceOrientation == UIDeviceOrientationFaceUp);
-    if((defaultSwap && !isReverse) || (!defaultSwap && isReverse)) {
-      return -orig;
-    }
-  }
-  return orig;
+  return calculateVolume(%orig);
 }
 %end
 %end
@@ -30,26 +25,10 @@
 %group iOS12
 %hook VolumeControl
 -(float)volumeStepUp {
-  float orig = %orig;
-  if(isEnabled) {
-    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-    BOOL defaultSwap = (deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationPortraitUpsideDown || deviceOrientation == UIDeviceOrientationFaceUp);
-    if((defaultSwap && !isReverse) || (!defaultSwap && isReverse)) {
-      return -orig;
-    }
-  }
-  return orig;
+  return calculateVolume(%orig);
 }
 -(float)volumeStepDown {
-  float orig = %orig;
-  if(isEnabled) {
-    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-    BOOL defaultSwap = (deviceOrientation == UIDeviceOrientationLandscapeLeft || deviceOrientation == UIDeviceOrientationPortraitUpsideDown || deviceOrientation == UIDeviceOrientationFaceUp);
-    if((defaultSwap && !isReverse) || (!defaultSwap && isReverse)) {
-      return -orig;
-    }
-  }
-  return orig;
+  return calculateVolume(%orig);
 }
 %end
 %end
